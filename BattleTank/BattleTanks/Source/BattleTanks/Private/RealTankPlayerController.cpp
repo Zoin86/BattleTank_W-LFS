@@ -2,6 +2,7 @@
 
 #include "RealTankPlayerController.h"
 #include "TankAimingComponent.h"
+#include "Tank.h"
 
 void ARealTankPlayerController::BeginPlay()
 {
@@ -18,6 +19,28 @@ void ARealTankPlayerController::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	AimTowardsCrosshair();
+}
+
+void ARealTankPlayerController::SetPawn(APawn * InPawn)
+{
+	Super::SetPawn(InPawn); // need to call super when overriding
+
+	if (InPawn)
+	{
+		auto PossessedTank = Cast<ATank>(InPawn);
+		if (!ensure(PossessedTank))
+		{
+			return;
+		}
+
+		// Subscribe our local method to the tanks death event
+		PossessedTank->OnDeath.AddUniqueDynamic(this, &ARealTankPlayerController::OnPossedTankDeath);
+	}
+}
+
+void ARealTankPlayerController::OnPossedTankDeath()
+{
+	StartSpectatingOnly();
 }
 
 void ARealTankPlayerController::AimTowardsCrosshair()

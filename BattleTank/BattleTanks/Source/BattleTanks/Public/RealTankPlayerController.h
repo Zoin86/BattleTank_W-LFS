@@ -16,6 +16,7 @@
 
  /// Forward Declaration
 class UTankAimingComponent;
+class ATank;
 
 UCLASS()
 class BATTLETANKS_API ARealTankPlayerController : public APlayerController
@@ -39,7 +40,13 @@ protected:
 private:
 	virtual void Tick(float DeltaTime) override;
 
+	void SetPawn(APawn * InPawn);
+
 	UTankAimingComponent* AimingComponent = nullptr;
+
+	// Needs to be a UFUNCTION when wanting to subscribe to delegate events
+	UFUNCTION()
+	void OnPossedTankDeath();
 
 	UPROPERTY(EditAnywhere)
 	float CrossHairXLocation = 0.5f;
