@@ -3,6 +3,7 @@
 #include "TankAIController.h"
 #include "Engine/World.h"
 #include "TankAimingComponent.h"
+#include "Tank.h"
 // AI controller has a dependency on movement component via pathfinding ( MoveToActor() )
 
 
@@ -11,6 +12,25 @@ void ATankAIController::BeginPlay()
 	Super::BeginPlay();
 
 	AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+}
+
+void ATankAIController::SetPawn(APawn * InPawn)
+{
+	Super::SetPawn(InPawn); // need to call super when overriding
+	
+	if (InPawn)
+	{
+		auto PossedTank = Cast<ATank>(InPawn);
+		if (!ensure(PossedTank)){return;}
+
+		// Subscribe our local method to the tanks death event
+		PossedTank->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnPossedTankDeath);
+	}
+}
+
+void ATankAIController::OnPossedTankDeath()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Tank OnDeath Event Recieved"))
 }
 
 void ATankAIController::Tick(float DeltaTime)
@@ -36,3 +56,4 @@ void ATankAIController::Tick(float DeltaTime)
 	
 
 }
+

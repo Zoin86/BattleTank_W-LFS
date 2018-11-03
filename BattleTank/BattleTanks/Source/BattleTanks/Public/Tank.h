@@ -6,10 +6,11 @@
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTankDelegate);
+
 /// Forward Declaration
 class UTankBarrel;
 class AProjectile;
-
 UCLASS()
 class BATTLETANKS_API ATank : public APawn
 {
@@ -18,6 +19,9 @@ class BATTLETANKS_API ATank : public APawn
 public:
 	// Sets default values for this pawn's properties
 	ATank();
+
+	// Creating Delegate Death Event
+	FTankDelegate OnDeath;
 
 	UFUNCTION(BlueprintPure, Category = Health)
 	float GetHealthPercentage() const;

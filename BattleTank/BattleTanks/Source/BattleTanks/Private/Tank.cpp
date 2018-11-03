@@ -15,15 +15,15 @@ void ATank::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-float ATank::GetHealthPercentage() const
-{
-	return TankHealth / TankStartingHealth;
-}
-
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
 	TankHealth = TankStartingHealth;
+}
+
+float ATank::GetHealthPercentage() const
+{
+	return TankHealth / TankStartingHealth;
 }
 
 float ATank::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -32,7 +32,7 @@ float ATank::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, ACo
 	TankHealth -= DamageToApply;
 	if (TankHealth <= 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Tank Died")) // TODO - Destroy actor, activate respawn mechanism
+		OnDeath.Broadcast();
 	}
 	return DamageToApply;
 }

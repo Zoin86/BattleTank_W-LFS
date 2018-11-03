@@ -61,7 +61,6 @@ void AProjectile::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor,
 		GetInstigator(),
 		GetInstigatorController()
 	);
-	UE_LOG(LogTemp, Warning, TEXT("Try to Damage"))
 	ExplosionForce->FireImpulse();
 	
 	// SetTimer Delegate needs an out - Only needs a type

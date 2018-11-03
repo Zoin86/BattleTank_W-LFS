@@ -16,6 +16,7 @@
 
 // Forward Declaration
 class UTankAimingComponent;
+class ATank;
 
 UCLASS()
 class BATTLETANKS_API ATankAIController : public AAIController
@@ -31,9 +32,15 @@ public:
 private:
 	UTankAimingComponent* AimingComponent = nullptr;
 
+	virtual void SetPawn(APawn* InPawn) override;
+
+	// Needs to be a UFUNCTION when wanting to subscribe to delegate events
+	UFUNCTION()
+	void OnPossedTankDeath();
 
 protected:
 	// How close can the AI tank get to the player
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	float AcceptanceRadius = 8000.f;
+
 };
