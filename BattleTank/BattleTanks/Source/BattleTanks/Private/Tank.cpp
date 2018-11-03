@@ -15,6 +15,11 @@ void ATank::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+float ATank::GetHealthPercentage() const
+{
+	return TankHealth / TankStartingHealth;
+}
+
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
