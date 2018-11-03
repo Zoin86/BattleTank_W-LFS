@@ -94,7 +94,7 @@ bool ARealTankPlayerController::GetLookVectorHitLocation(FVector& LookDirection,
 	FCollisionQueryParams TraceCollisionParameters = FCollisionQueryParams();
 	TraceCollisionParameters.AddIgnoredActor(GetPawn());
 
-	if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, TraceCollisionParameters))
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Camera, TraceCollisionParameters))
 	{
 		OutHitLocation = HitResult.Location;
 		return true;
