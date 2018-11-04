@@ -10,6 +10,9 @@
 /**
  * Tank Track used to set maximum driving force, and apply it to the tank
  */
+
+class ASprungWheel;
+
 UCLASS(meta = (BlueprintSpawnableComponent))
 class BATTLETANKS_API UTankTrack : public UStaticMeshComponent
 {
@@ -18,22 +21,17 @@ class BATTLETANKS_API UTankTrack : public UStaticMeshComponent
 private:
 	UTankTrack();
 
-	UFUNCTION() // UFUNCTION required for this because of "Unreal Magic"
-	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
-
-	float CurrentThrottle = 0;
+	TArray<ASprungWheel*> GetWheels() const;
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:
-	void ApplySideWaysForce();
-
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void SetThrottle(float Throttle);
 
-	void DriveTrack();
+	void DriveTrack(float CurrentThrottle);
 	
 	// Max for per track in newtons
 	UPROPERTY(EditAnywhere, Category = Setup)

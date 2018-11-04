@@ -52,6 +52,9 @@ void AProjectile::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor,
 	LaunchBlast->Deactivate();
 	ImpactBlast->Activate();
 
+	TArray<AActor*> Ignore;
+	Ignore.Add(this);
+
 	UGameplayStatics::ApplyRadialDamage(this,
 		ProjectileDamage,
 		GetActorLocation(),
