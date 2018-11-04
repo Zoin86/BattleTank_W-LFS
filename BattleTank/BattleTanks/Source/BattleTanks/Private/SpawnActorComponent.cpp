@@ -20,13 +20,13 @@ void USpawnActorComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// SpawnActorDeferred() - Have to spawn without calling constructors, which we can do with SpawnActorDeferred - SpawnActorDeferred() will NOT RUN the Construction script of blueprints to give caller an opportunity to set parameters beforehand. (Look at Next comment)
-	auto NewActor = GetWorld()->SpawnActorDeferred<AActor>(SpawnClass, GetComponentTransform());
-	if (!NewActor){	return;	}
+	SpawnedActor = GetWorld()->SpawnActorDeferred<AActor>(SpawnClass, GetComponentTransform());
+	if (!SpawnedActor){	return;	}
 
-	NewActor->AttachToComponent(this, FAttachmentTransformRules::KeepWorldTransform);
+	SpawnedActor->AttachToComponent(this, FAttachmentTransformRules::KeepWorldTransform);
 
 	// Required for SpawnActorDeferred() - Caller is Responsible for invoking construction Manually by calling UGameplayStatics::FinishSpawningActor()
-	UGameplayStatics::FinishSpawningActor(NewActor, GetComponentTransform());
+	UGameplayStatics::FinishSpawningActor(SpawnedActor, GetComponentTransform());
 }
 
 
@@ -37,4 +37,10 @@ void USpawnActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 	// ...
 }
+
+AActor * USpawnActorComponent::GetSpawnComponent() const
+{
+	return SpawnedActor;
+}
+
 
