@@ -32,6 +32,7 @@ float ATank::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, ACo
 	TankHealth -= DamageToApply;
 	if (TankHealth <= 0)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Broadcast Death"))
 		OnDeath.Broadcast();
 	}
 	return DamageToApply;

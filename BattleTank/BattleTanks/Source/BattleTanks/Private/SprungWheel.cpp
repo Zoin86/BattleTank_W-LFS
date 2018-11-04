@@ -7,7 +7,8 @@
 ASprungWheel::ASprungWheel()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.TickGroup = TG_PostPhysics;
 
 	MassWheelConstraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(FName("MassWheelConstraint"));
 	SetRootComponent(MassWheelConstraint);
@@ -27,6 +28,8 @@ void ASprungWheel::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Wheel->SetNotifyRigidBodyCollision(true);
+	Wheel->OnComponentHit.AddDynamic(this, &ASprungWheel::OnHit);
 	SetupConstraint();
 
 }
@@ -41,8 +44,10 @@ void ASprungWheel::SetupConstraint()
 	MassWheelConstraint->SetConstrainedComponents(BodyRoot, NAME_None, Axle, NAME_None);
 	AxleWheelConstrain->SetConstrainedComponents(Axle, NAME_None, Wheel, NAME_None);
 
-	Axle->SetMassOverrideInKg(NAME_None, BodyRoot->GetMass() / 40);
-	Wheel->SetMassOverrideInKg(NAME_None, Axle->GetMass() / 4);
+	// TODO - Find solution to fix the tank tilting
+	// Automatically add mass to wheel and Axel depending on the mass from its parent
+	//Axle->SetMassOverrideInKg(NAME_None, BodyRoot->GetMass() / 140);
+	//Wheel->SetMassOverrideInKg(NAME_None, Axle->GetMass() / 14);
 }
 
 // Called every frame
@@ -50,10 +55,26 @@ void ASprungWheel::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (GetWorld()->TickGroup == TG_PostPhysics)
+	{
+		// Need to reset for ready it up for the next frame
+		TotalForceMagnitudeThisFrame = 0;
+	}	
 }
 
 void ASprungWheel::AddDrivingForce(float ForceMagnitude)
 {
-	Wheel->AddForce(Axle->GetForwardVector() * ForceMagnitude);
+	TotalForceMagnitudeThisFrame += ForceMagnitude;
+	// Wheel->AddForce(Axle->GetForwardVector() * ForceMagnitude);
+}
+
+void ASprungWheel::ApplyForce()
+{
+	Wheel->AddForce(Axle->GetForwardVector() * TotalForceMagnitudeThisFrame);
+}
+
+void ASprungWheel::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
+{
+	ApplyForce();
 }
 

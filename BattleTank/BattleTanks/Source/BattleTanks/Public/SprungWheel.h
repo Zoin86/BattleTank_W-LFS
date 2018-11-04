@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
+#include "Engine/World.h"
 #include "Components/SphereComponent.h"
 #include "SprungWheel.generated.h"
 
@@ -40,5 +41,11 @@ private:
 	UPhysicsConstraintComponent* MassWheelConstraint = nullptr;
 	UPROPERTY(VisibleAnywhere, Category = Component)
 	UPhysicsConstraintComponent* AxleWheelConstrain = nullptr;
+
+	float TotalForceMagnitudeThisFrame = 0.f;
+	void ApplyForce();
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 	
 };

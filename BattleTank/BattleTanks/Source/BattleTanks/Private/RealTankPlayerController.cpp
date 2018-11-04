@@ -8,6 +8,7 @@ void ARealTankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (!GetPawn()){ return; }
 	AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(AimingComponent)) { return; }
 	FoundAimingComponent(AimingComponent);

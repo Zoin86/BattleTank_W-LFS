@@ -17,11 +17,14 @@ void ATankAIController::BeginPlay()
 void ATankAIController::SetPawn(APawn * InPawn)
 {
 	Super::SetPawn(InPawn); // need to call super when overriding
-	
+
 	if (InPawn)
 	{
 		auto PossessedTank = Cast<ATank>(InPawn);
-		if (PossessedTank){return;}
+		if (!ensure(PossessedTank))
+		{
+			return;
+		}
 
 		// Subscribe our local method to the tanks death event
 		PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnPossedTankDeath);
